@@ -2,7 +2,7 @@ from PySide2.QtCore import QUrl, QTimer, Qt
 from PySide2.QtWebEngineWidgets import QWebEngineView, QWebEngineProfile, QWebEnginePage
 from PySide2.QtWebEngineWidgets import QWebEngineSettings as ws
 from PySide2.QtWebEngineCore import QWebEngineHttpRequest
-from PySide2.QtWidgets import QMainWindow, QDialog
+from PySide2.QtWidgets import QDialog
 from PySide2.QtNetwork import QNetworkCookie
 from PyWeb.config import BaseConfig as bconf
 import random
