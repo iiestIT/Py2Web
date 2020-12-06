@@ -2,7 +2,6 @@ import os
 
 
 class BaseConfig:
-    DEBUG = int(os.environ.get("DEBUG"))
     SOURCE_WAIT_INTERVAL = int(os.environ.get("SOURCE_WAIT_INTERVAL", 5000))
     AUTO_LOAD_IMAGES = bool(os.environ.get("AUTO_LOAD_IMAGES", True))
     JAVASCRIPT_ENABLED = bool(os.environ.get("JAVASCRIPT_ENABLED", True))
