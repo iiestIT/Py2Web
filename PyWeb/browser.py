@@ -5,6 +5,7 @@ from PySide2.QtWebEngineCore import QWebEngineHttpRequest
 from PySide2.QtWidgets import QMainWindow, QDialog
 from PySide2.QtNetwork import QNetworkCookie
 from PyWeb.config import BaseConfig as bconf
+import random
 
 
 class PyWebBrowser(QDialog):
@@ -12,7 +13,6 @@ class PyWebBrowser(QDialog):
         super(PyWebBrowser, self).__init__()
         self.pwb = QWebEngineView()
         self.pwb.setAttribute(Qt.WA_DeleteOnClose, True)
-        self._settings()
 
         self.raw_cookies = []
         self.cookie_list = []
@@ -21,12 +21,15 @@ class PyWebBrowser(QDialog):
         self.source_timer = QTimer()
 
         profile = QWebEngineProfile("pyweb", self.pwb)
+        profile.setHttpUserAgent(random.choice(bconf.USER_AGENT_LIST))
         cookie_store = profile.cookieStore()
 
         cookie_store.cookieAdded.connect(self._on_cookie)
 
         wp = QWebEnginePage(profile, self.pwb)
         self.pwb.setPage(wp)
+
+        self._settings()
 
     def _settings(self):
         s = self.pwb.settings()
@@ -52,7 +55,7 @@ class PyWebBrowser(QDialog):
         self.page_source = html
         self.source_timer.stop()
         self._to_json()
-        self.accept()
+        self._return()
 
     def _on_cookie(self, cookie):
         for i in self.raw_cookies:
@@ -72,6 +75,14 @@ class PyWebBrowser(QDialog):
                 "httpOnly": i.isHttpOnly()
             }
             self.cookie_list.append(data)
+
+    def _return(self):
+        self.return_dict = {
+            "url": str(self.req_obj.url().toString()),
+            "cookies": self.cookie_list,
+            "content": str(self.page_source)
+        }
+        self.accept()
 
     def get(self, url: str):
         self.req_obj.setUrl(QUrl().fromUserInput(url))
