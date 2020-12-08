@@ -50,6 +50,7 @@ class PyWebBrowser(QDialog):
     def _get_page_source(self):
         if self.pwb.loadFinished:
             self.pwb.page().toHtml(self._page_to_var)
+            self.pwb.page().runJavaScript(self.s)
 
     def _page_to_var(self, html):
         self.page_source = html
@@ -84,7 +85,8 @@ class PyWebBrowser(QDialog):
         }
         self.accept()
 
-    def get(self, url: str):
+    def get(self, url: str, script: str = None):
+        self.s = script
         self.req_obj.setUrl(QUrl().fromUserInput(url))
 
         self.source_timer.setInterval(bconf.SOURCE_WAIT_INTERVAL)
