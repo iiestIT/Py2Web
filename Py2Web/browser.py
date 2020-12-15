@@ -1,4 +1,4 @@
-from PySide2.QtCore import QUrl, QTimer, Qt
+from PySide2.QtCore import QUrl, Qt
 from PySide2.QtWebEngineWidgets import QWebEngineView, QWebEngineProfile, QWebEnginePage
 from PySide2.QtWebEngineWidgets import QWebEngineSettings as ws
 from PySide2.QtWebEngineCore import QWebEngineHttpRequest
@@ -32,25 +32,23 @@ class Py2WebBrowser(QDialog):
         self.pwb.show()
 
     def _settings(self):
-        s = self.pwb.settings()
-        s.setAttribute(ws.AutoLoadImages, bconf.AUTO_LOAD_IMAGES)
-        s.setAttribute(ws.JavascriptEnabled, bconf.JAVASCRIPT_ENABLED)
-        s.setAttribute(ws.JavascriptCanOpenWindows, bconf.JAVASCRIPT_CAN_OPEN_WINDOWS)
-        s.setAttribute(ws.LocalStorageEnabled, bconf.LOCAL_STORAGE_ENABLED)
-        s.setAttribute(ws.LocalContentCanAccessRemoteUrls, bconf.LOCAL_CONTENT_CAN_ACCESS_REMOTE_URLS)
-        s.setAttribute(ws.LocalContentCanAccessFileUrls, bconf.LOCAL_CONTENT_CAN_ACCESS_FILE_URLS)
-        s.setAttribute(ws.ErrorPageEnabled, bconf.ERROR_PAGES_ENABLED)
-        s.setAttribute(ws.PluginsEnabled, bconf.PLUGINS_ENABLED)
-        s.setAttribute(ws.WebGLEnabled, bconf.WEBGL_ENABLED)
-        s.setAttribute(ws.AllowRunningInsecureContent, bconf.ALLOW_RUNNING_INSECURE_CONTENT)
-        s.setAttribute(ws.AllowGeolocationOnInsecureOrigins, bconf.ALLOW_GEOLOCATION_ON_INSECURE_ORIGINS)
-        s.setAttribute(ws.ShowScrollBars, bconf.SHOW_SCROLL_BARS)
-        s.setAttribute(ws.DnsPrefetchEnabled, bconf.DNS_PREFETCH_ENABLED)
+        self.pwb.settings().setAttribute(ws.AutoLoadImages, bconf.AUTO_LOAD_IMAGES)
+        self.pwb.settings().setAttribute(ws.JavascriptEnabled, bconf.JAVASCRIPT_ENABLED)
+        self.pwb.settings().setAttribute(ws.JavascriptCanOpenWindows, bconf.JAVASCRIPT_CAN_OPEN_WINDOWS)
+        self.pwb.settings().setAttribute(ws.LocalStorageEnabled, bconf.LOCAL_STORAGE_ENABLED)
+        self.pwb.settings().setAttribute(ws.LocalContentCanAccessRemoteUrls, bconf.LOCAL_CONTENT_CAN_ACCESS_REMOTE_URLS)
+        self.pwb.settings().setAttribute(ws.LocalContentCanAccessFileUrls, bconf.LOCAL_CONTENT_CAN_ACCESS_FILE_URLS)
+        self.pwb.settings().setAttribute(ws.ErrorPageEnabled, bconf.ERROR_PAGES_ENABLED)
+        self.pwb.settings().setAttribute(ws.PluginsEnabled, bconf.PLUGINS_ENABLED)
+        self.pwb.settings().setAttribute(ws.WebGLEnabled, bconf.WEBGL_ENABLED)
+        self.pwb.settings().setAttribute(ws.AllowRunningInsecureContent, bconf.ALLOW_RUNNING_INSECURE_CONTENT)
+        self.pwb.settings().setAttribute(ws.AllowGeolocationOnInsecureOrigins, bconf.ALLOW_GEOLOCATION_ON_INSECURE_ORIGINS)
+        self.pwb.settings().setAttribute(ws.ShowScrollBars, bconf.SHOW_SCROLL_BARS)
+        self.pwb.settings().setAttribute(ws.DnsPrefetchEnabled, bconf.DNS_PREFETCH_ENABLED)
 
-    def _get_page_source(self):
-        if self.pwb.loadFinished:
-            self.pwb.page().toHtml(self._page_to_var)
-            self.pwb.page().runJavaScript(self.s)
+    def _loadFinished(self):
+        self.pwb.page().toHtml(self._page_to_var)
+        self.pwb.page().runJavaScript(self.s)
 
     def _page_to_var(self, html):
         self.page_source = html
@@ -91,4 +89,4 @@ class Py2WebBrowser(QDialog):
         self.pwb.page().profile().cookieStore().deleteAllCookies()
 
         self.pwb.load(self.req_obj)
-        self.pwb.loadFinished.connect(self._get_page_source)
+        self.pwb.loadFinished.connect(self._loadFinished)
