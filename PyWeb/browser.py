@@ -30,6 +30,7 @@ class PyWebBrowser(QDialog):
         self.pwb.setPage(wp)
 
         self._settings()
+        self.pwb.show()
 
     def _settings(self):
         s = self.pwb.settings()
@@ -92,5 +93,7 @@ class PyWebBrowser(QDialog):
         self.source_timer.setInterval(bconf.SOURCE_WAIT_INTERVAL)
         self.source_timer.timeout.connect(self._get_page_source)
         self.source_timer.start()
+
+        self.pwb.page().profile().cookieStore().deleteAllCookies()
 
         self.pwb.load(self.req_obj)
