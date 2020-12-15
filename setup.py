@@ -2,12 +2,12 @@ from setuptools import setup, find_packages
 
 
 setup(
-    name='PyWeb',
+    name='Py2Web',
     version='0.0.1.dev1',
     description='A python package to perform HTTP requests to websites and render their content.',
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
-    url='https://github.com/iiestIT/PyWeb',
+    url='https://github.com/iiestIT/Py2Web',
     author='iiestIT',
     author_email='it.iiest.de@gmail.com',
     classifiers=[

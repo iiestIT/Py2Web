@@ -4,13 +4,13 @@ from PySide2.QtWebEngineWidgets import QWebEngineSettings as ws
 from PySide2.QtWebEngineCore import QWebEngineHttpRequest
 from PySide2.QtWidgets import QDialog
 from PySide2.QtNetwork import QNetworkCookie
-from PyWeb.config import BaseConfig as bconf
+from Py2Web.config import BaseConfig as bconf
 import random
 
 
-class PyWebBrowser(QDialog):
+class Py2WebBrowser(QDialog):
     def __init__(self):
-        super(PyWebBrowser, self).__init__()
+        super(Py2WebBrowser, self).__init__()
         self.pwb = QWebEngineView()
         self.pwb.setAttribute(Qt.WA_DeleteOnClose, True)
 
