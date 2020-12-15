@@ -18,7 +18,6 @@ class Py2WebBrowser(QDialog):
         self.cookie_list = []
 
         self.req_obj = QWebEngineHttpRequest()
-        self.source_timer = QTimer()
 
         profile = QWebEngineProfile("pyweb", self.pwb)
         profile.setHttpUserAgent(random.choice(bconf.USER_AGENT_LIST))
@@ -55,7 +54,6 @@ class Py2WebBrowser(QDialog):
 
     def _page_to_var(self, html):
         self.page_source = html
-        self.source_timer.stop()
         self._to_json()
         self._return()
 
@@ -90,10 +88,7 @@ class Py2WebBrowser(QDialog):
         self.s = script
         self.req_obj.setUrl(QUrl().fromUserInput(url))
 
-        self.source_timer.setInterval(bconf.SOURCE_WAIT_INTERVAL)
-        self.source_timer.timeout.connect(self._get_page_source)
-        self.source_timer.start()
-
         self.pwb.page().profile().cookieStore().deleteAllCookies()
 
         self.pwb.load(self.req_obj)
+        self.pwb.loadFinished.connect(self._get_page_source)
