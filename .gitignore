@@ -142,3 +142,4 @@ cython_debug/
 
 # dev Files
 _dev_run.py
+dev.txt
