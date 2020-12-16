@@ -10,4 +10,4 @@ def get(url: str):
     pw.setAttribute(Qt.WA_DeleteOnClose, True)
     pw.setAttribute(Qt.WA_DontShowOnScreen, True)
     if pw.exec_() == QDialog.Accepted:
-        return pw.return_dict
+        return pw.return_
