@@ -11,6 +11,9 @@ import random
 class Py2WebBrowser(QDialog):
     def __init__(self, settings=None):
         super(Py2WebBrowser, self).__init__()
+        self.setAttribute(Qt.WA_DeleteOnClose, True)
+        self.setAttribute(Qt.WA_DontShowOnScreen, True)
+
         self.pwb = QWebEngineView()
         self.pwb.setAttribute(Qt.WA_DeleteOnClose, True)
 
@@ -52,8 +55,15 @@ class Py2WebBrowser(QDialog):
         self.pwb.settings().setAttribute(ws.DnsPrefetchEnabled, self.bconf.DNS_PREFETCH_ENABLED)
 
     def _loadFinished(self):
+        if len(self.js_script) > 0:
+            self._js_runner()
         self.pwb.page().toHtml(self._page_to_var)
-        self.pwb.page().runJavaScript(self.s)
+
+    def _js_runner(self):
+        self.pwb.page().runJavaScript(self.js_script, 0, self._js_callback)
+
+    def _js_callback(self, jsr):
+        self.js_return = jsr
 
     def _page_to_var(self, html):
         self.page_source = html
@@ -83,12 +93,14 @@ class Py2WebBrowser(QDialog):
         self.return_ = {
             "url": str(self.req_obj.url().toString()),
             "cookies": self.cookie_list,
-            "content": str(self.page_source)
+            "content": str(self.page_source),
         }
+        if len(self.js_script) > 0:
+            self.return_.update({"js_response": self.js_return})
         self.accept()
 
-    def get(self, url: str, script: str = None):
-        self.s = script
+    def get(self, url: str, script: str):
+        self.js_script = script
         self.req_obj.setUrl(QUrl().fromUserInput(url))
 
         self.pwb.page().profile().cookieStore().deleteAllCookies()

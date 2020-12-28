@@ -1,13 +1,13 @@
-from PySide2.QtCore import Qt
 from PySide2.QtWidgets import QDialog
 from Py2Web.browser import Py2WebBrowser
-from Py2Web.utils.xvfb import VirtualDisplay
+import time
 
 
-def get(url: str):
-    pw = Py2WebBrowser()
-    pw.get(url)
-    pw.setAttribute(Qt.WA_DeleteOnClose, True)
-    pw.setAttribute(Qt.WA_DontShowOnScreen, True)
+def get(url: str, script: str = "", p2wb: Py2WebBrowser = Py2WebBrowser):
+    pw = p2wb()
+    st = time.time()
+    pw.get(url, script)
     if pw.exec_() == QDialog.Accepted:
-        return pw.return_
+        ret = pw.return_
+        ret.update({"process_time": time.time() - st})
+        return ret
