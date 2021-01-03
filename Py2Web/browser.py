@@ -3,8 +3,10 @@ from PySide2.QtWebEngineWidgets import QWebEngineView, QWebEnginePage
 from PySide2.QtWebEngineCore import QWebEngineHttpRequest
 from PySide2.QtWidgets import QDialog
 from PySide2.QtNetwork import QNetworkCookie
+from typing import Union
 from Py2Web.config import BaseConfig
 from Py2Web.engine import Py2WebProfile
+import time
 
 
 class Py2WebBrowser(QDialog):
@@ -20,6 +22,7 @@ class Py2WebBrowser(QDialog):
 
         self.raw_cookies = []
         self.cookie_list = []
+        self.js_return = []
 
         self.req_obj = QWebEngineHttpRequest()
 
@@ -34,15 +37,23 @@ class Py2WebBrowser(QDialog):
         self.pwb.show()
 
     def _loadFinished(self):
+        if self.wait_bs > 0:
+            time.sleep(self.wait)
         if len(self.js_script) > 0:
             self._js_runner()
+        if self.wait_as > 0:
+            time.sleep(self.wait)
         self.pwb.page().toHtml(self._page_to_var)
 
     def _js_runner(self):
-        self.pwb.page().runJavaScript(self.js_script, 0, self._js_callback)
+        if type(self.js_script) == list:
+            for i in self.js_script:
+                self.pwb.page().runJavaScript(i, 0, self._js_callback)
+        else:
+            self.pwb.page().runJavaScript(self.js_script, 0, self._js_callback)
 
     def _js_callback(self, jsr):
-        self.js_return = jsr
+        self.js_return.append(jsr)
 
     def _page_to_var(self, html):
         self.page_source = html
@@ -78,8 +89,10 @@ class Py2WebBrowser(QDialog):
             self.return_.update({"js_response": self.js_return})
         self.accept()
 
-    def get(self, url: str, script: str):
+    def get(self, url: str, script: Union[str, list], wait_bs: int = 0, wait_as: int = 0):
         self.js_script = script
+        self.wait_bs = wait_bs
+        self.wait_as = wait_as
         self.req_obj.setUrl(QUrl().fromUserInput(url))
 
         self.pwb.page().profile().cookieStore().deleteAllCookies()
