@@ -22,6 +22,6 @@ class Py2WebProfile(QWebEngineProfile):
         self.settings().setAttribute(ws.AllowGeolocationOnInsecureOrigins, bconf.ALLOW_GEOLOCATION_ON_INSECURE_ORIGINS)
         self.settings().setAttribute(ws.ShowScrollBars, bconf.SHOW_SCROLL_BARS)
         self.settings().setAttribute(ws.DnsPrefetchEnabled, bconf.DNS_PREFETCH_ENABLED)
-        self.settings().setDefaultTextEncoding("utf-8")
+        self.settings().setDefaultTextEncoding(bconf.DEFAULT_TEXT_ENCODING)
 
         self.setHttpUserAgent(random.choice(bconf.USER_AGENT_LIST))

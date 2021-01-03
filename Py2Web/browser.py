@@ -83,19 +83,32 @@ class Py2WebBrowser(QDialog):
         self.return_ = {
             "url": str(self.req_obj.url().toString()),
             "cookies": self.cookie_list,
+            "raw_cookies": self.raw_cookies,
             "content": str(self.page_source),
         }
         if len(self.js_script) > 0:
             self.return_.update({"js_response": self.js_return})
         self.accept()
 
-    def get(self, url: str, script: Union[str, list], wait_bs: int = 0, wait_as: int = 0):
+    def get(
+            self,
+            url: str,
+            script: Union[str, list],
+            wait_bs: int = 0,
+            wait_as: int = 0,
+            cookies: Union[QNetworkCookie, list[QNetworkCookie], None] = None
+    ):
         self.js_script = script
         self.wait_bs = wait_bs
         self.wait_as = wait_as
         self.req_obj.setUrl(QUrl().fromUserInput(url))
 
         self.pwb.page().profile().cookieStore().deleteAllCookies()
+        if not cookies == None:
+            if type(cookies) == list:
+                [self.pwb.page().profile().cookieStore().setCookie(i) for i in cookies]
+            else:
+                self.pwb.page().profile().cookieStore().setCookie(cookies)
 
         self.pwb.load(self.req_obj)
         self.pwb.loadFinished.connect(self._loadFinished)
