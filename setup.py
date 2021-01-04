@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='Py2Web',
-    version='1.0.3',
+    version='1.0.6',
     description='A python package to perform HTTP requests to websites and render their content.',
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",

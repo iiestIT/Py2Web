@@ -10,7 +10,7 @@ def get(
         script: Union[str, list] = "",
         wait_bs: int = 0,
         wait_as: int = 0,
-        cookies: Union[QNetworkCookie, list[QNetworkCookie], None] = None,
+        cookies=None,
         p2wb: Py2WebBrowser = Py2WebBrowser
 ):
     pw = p2wb()

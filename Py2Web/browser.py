@@ -96,7 +96,7 @@ class Py2WebBrowser(QDialog):
             script: Union[str, list],
             wait_bs: int = 0,
             wait_as: int = 0,
-            cookies: Union[QNetworkCookie, list[QNetworkCookie], None] = None
+            cookies=None
     ):
         self.js_script = script
         self.wait_bs = wait_bs
